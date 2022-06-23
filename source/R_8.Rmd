@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 제8장 통계분석
 -
 # 0단원 자율학습
-- [ ]( )
+- @분석을 사용하야된다! -> 선행연구를 찾아보기, 해당 분석 방법의 가설 설정 예시를 확인하기
 
 # 1단원 분석 방법 (172p)
 ## 1. 기술 통계
@@ -78,10 +78,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 # 3단원 통계 분석 사례 (178p)
-## 0. 라이브러리 불러오기 # 없는 경우 삭제
-```{r}
-
-```
 
 ## 1. 두 집단의 평균 차이 검정
 - t.test 어떻게 데이터를 입력하는지 확인
@@ -129,18 +125,49 @@ ggplot(mpg1, aes(x = cty, fill = trans)) +
 
 
 ## 2. 교차분석
+- chisq.test() 함수 활용
 - 교차분석: 범주형 변수들이 관계가 있다는 것을 입증.
-- 평균의 차이가 아니라 비율에 차이가 있는지를 검정합니다.
-```{r}
+- 평균의 차이가 아니라 '비율에 차이'가 있는지를 검정합니다.
+- 교차분석 검정은 R의 chisq.test() 함수로 진행
+- 귀무가설 : trans에 따라 drv(4,f,r)의 (비율)차이가 없다.
+- 대립가설 : trans에 따라 drv의 차이가 있다. 
 
+```{r}
+# 빈도표
+table(mpg1$trans,mpg1$drv) # 교차분석
+
+# 비율
+prop.table(table(mpg1$trans, mpg1$drv),1)
+# 결과- auto 4륜 구동(4)인 47.8%, manual 전륜구동(f) 53.2%가 가장 많음
+# 가정- 실제로 통계적으로 봤을 때, 차이가 있는지 검정
+# 귀무가설 : trans에 따라 drv(4,f,r)의 (비율)차이가 없다.
+# 대립가설 : trans에 따라 drv의 차이가 있다. 
+
+# 방법 1
+chisq.test(mpg1$trans,mpg1$drv)
+
+# 방법 2
+chisq.test(table(mpg1$trans,mpg1$drv))
+
+# 방법 3
+summary(table(mpg1$trans,mpg1$drv))
+
+# p-value를 확인하고 귀무/대립가설인지 확인
+# 결과- trans에 따라 drv(4,f,r)의 (비율)차이가 없다.
 ```
 
 ## 3. 상관관계분석
+- cor.test() 함수 활용
 ```{r}
+mpg1 <-read.csv("data/mpg1.csv", stringsAsFactors = F)
 
+cor.test(mpg1$cty,mpg1$hwy)  # 상관관계 분석
+# 결과 - p-value 가 2.2/10의16승 보다 작다. -> 0.05보다 작음 -> 대립가설 채택, 
+# sample estimates: 0.9559159 상관관계가 1에 가까움 -> 상관관계가 높다
 ```
 
 ## 4. 회귀분석
+- 06.24 오전 강의
 ```{r}
 ```
 
