@@ -2,6 +2,8 @@
 title: "R을 이용한 공공데이터 분석_제6장"
 output:
   html_document:
+    toc: true
+    toc_float: true
     keep_md: true
 date: '2022-06-21'
 ---
@@ -9,11 +11,10 @@ date: '2022-06-21'
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-06.21 오후강의
--
+
 제6장 데이터 가공 (분석 프로세스)
 -
-### 자율학습
+# 0단원 자율학습
 - [5장 데이터 변환](https://r4ds.had.co.nz/transform.html)
 - 코드 위주로 다 쳐보기
 ```{r}
@@ -24,7 +25,7 @@ knitr::opts_chunk$set(echo = TRUE)
 # library(tidyverse)
 ```
 
-### 1. 데이터 전처리 (98p)
+# 1단원 데이터 전처리 (98p)
 - 데이터 전처리를 위한 도구(패키지) 2가지 차이
 - dplyr : 10GB 이내, 매우 쉬움
 - data.table : 50GB, 어려움
@@ -33,7 +34,7 @@ knitr::opts_chunk$set(echo = TRUE)
 # install.packages("dplyr")
 library(dplyr)
 
-mpg1 <-read.csv("mpg1.csv", stringsAsFactors = F)
+  mpg1 <-read.csv("data/mpg1.csv", stringsAsFactors = F)
 
 # 99p 방법1, 방법2 차이 설명
 # %>% : 파이프 연산자 pipe operator
@@ -47,24 +48,25 @@ data3 <-filter(data3, drv =="f")
 
 ```
 
-### 중요도 높은 함수들
+# 중요도 높은 함수들
 - 4.select : 컬럼명 추출
 - 5.filter : 행 추출 (조건식)
 - 6.mutate : 파생변수, 데이터 분석에 있어 중요함. 기존에 있던 데이터에서 변수를 새로 만듬. ex.총매출액, 영업이익
 - 7.group by 와 7.summarise()는 함께간다 : 비교를 해야 데이터가 의미가 있음
 
-### 2. rename()
+# 2단원 rename()
 - 이름 바꾸기, 변수 이름을 한 번에 여러개 바꿀 수 있음.
 ```{r}
 ```
-### 3. count()
+# 3단원 count()
 - count() = table(): 데이터세트의 '범주형 변수'에서 범주들의 빈도를 센다.
 ```{r}
 ```
-### 4. select()
+# 4단원 select()
 - 데이터세트의 열 추출/삭제하여 새로운 객체를 만들 때 사용.
 - 데이터세트의 용량이 너무 많으면 X, 필요한 열만 추출하여 분석
-1) 필요한 열을 추출하기
+
+## 1. 필요한 열을 추출하기
 ```{r}
 # 방법1
 mpg1_1 <-mpg1 %>% select(manufacturer,trans,cty)
@@ -72,7 +74,7 @@ str(mpg1_1)
 # 방법2
 mpg1_2 <-select(mpg1,manufacturer,trans,cty)
 ```
-  2) 불필요한 열 삭제 후 필요한 열만 남기기
+## 2. 불필요한 열 삭제 후 필요한 열만 남기기
 ```{r}
 # 방법1
 mpg1_type1 <-mpg1 %>% select(-cty,-hwy)
@@ -86,19 +88,19 @@ mpg1_type4 <-select(mpg1,-c(cty,hwy))
 
 ```
 
-### 5. slice(),filter()
-  1) slice(): 행의 일부를 추출하기
+# 5단원 slice(),filter()
+## 1. slice(): 행의 일부를 추출하기
 ```{r}
 # 방법1
 mpg1 %>% slice(1,4,5)
 # 방법2
 slice(mpg1,1,4,5)
 ```
-  2) filter(): 조건에 맞는 행을 추출하기
+## 2. filter(): 조건에 맞는 행을 추출하기
 ```{r}
 ```
 
-2)1) 비교값이 같은 데이터 추출
+### 2.1. 비교값이 같은 데이터 추출
 ```{r}
 # 방법1 
 mpg1_hd1 <-mpg1 %>% filter(manufacturer=="hyundai")
@@ -115,7 +117,7 @@ mpg1 %>%filter(cty==max(cty))
 ```
 * '=': 지정하거나 입력, '==':비교해서 같다
 
-2)2) 비교값이 다른 데이터 추출
+### 2.2. 비교값이 다른 데이터 추출
 ```{r}
 # 방법1
 mpg1_no_hd1 <-mpg1 %>% filter(manufacturer!="hyundai")
@@ -124,10 +126,10 @@ mpg1_no_hd2 <-filter(mpg1,manufacturer!="hyundai")
 ```
 * '=!': 같지 않다
 
-2)3) 비교값이 크거나 작은 데이터 추출
+### 2.3. 비교값이 크거나 작은 데이터 추출
 ```{r}
 ```
-    2)3)1) 비교값이 작은(<) 데이터 추출
+#### 2.3.1. 비교값이 작은(<) 데이터 추출
 ```{r}
 mean(mpg1$cty) # cty의 평균 구하기
 # 방법1
@@ -137,7 +139,7 @@ mpg1_low2 <-filter(mpg1,cty<16.85897)
 # 방법3
 mpg1_low3 <-mpg1 %>% filter(cty<mean(cty))
 ```
-    2)3)2) 비교값이 작거나 같은(<=) 데이터 추출
+#### 2.3.2. 비교값이 작거나 같은(<=) 데이터 추출
 ```{r}
 quantile(mpg1$cty) #1사분위수 알아보기
 # 방법1
@@ -145,7 +147,7 @@ mpg1_low4 <-mpg1 %>% filter(cty<=14)
 # 방법2
 mpg1_low5 <-filter(mpg1,cty<=14)
 ```
-    2)3)3) 비교값이 큰(>) 데이터 추출
+#### 2.3.3. 비교값이 큰(>) 데이터 추출
 ```{r}
 median(mpg1$cty) #중앙값 구하기기
 # 방법1
@@ -155,7 +157,7 @@ mpg1_hight2 <-filter(mpg1,cty>17)
 # 방법3
 mpg1_hight3 <-mpg1 %>% filter(cty>median(cty))
 ```
-    2)3)4) 비교값이 크거나 같은(>=) 데이터 추출
+#### 2.3.4. 비교값이 크거나 같은(>=) 데이터 추출
 ```{r}
 quantile(mpg1$cty)
 # 방법1
@@ -163,10 +165,10 @@ mpg1_hight4 <-mpg1 %>% filter(cty>=19)
 # 방법2
 mpg1_hight5 <-filter(mpg1,cty>=19)
 ```
-2)4) 복수의 조건을 충족하는 데이터 추출
+### 2.4. 복수의 조건을 충족하는 데이터 추출
 ```{r}
 ```
-    2)4)1) 조건이 2개일 때
+#### 2.4.1. 조건이 2개일 때
 ```{r}
 # mpg1에서 manufacturer가 hyundai이면서 cty가 모든 자동차의 평균 이상인 데이터를 추출하기
 
@@ -178,7 +180,7 @@ mpq1_hd4 <-filter(mpg1,manufacturer=="hyundai"&cty>=16.85897)
 # 방법3
 mpq1_hd5 <-mpg1 %>% filter(manufacturer=="hyundai"&cty>=mean(cty))
 ```
-    2)4)2) 조건이 3개일 때
+#### 2.4.2. 조건이 3개일 때
 ```{r}
 # mpg1의 manufacturer가 hyundai이면서, trans가 auto이고, cty가 전체 자동차의 중앙값 이상인 데이터를 추출하기
 
@@ -190,7 +192,8 @@ mpq1_hd7 <-filter(mpg1,manufacturer=="hyundai"&trans=="auto"&cty>=17)
 # 방법3
 mpq1_hd8 <-mpg1 %>% filter(manufacturer=="hyundai"&trans=="auto"&cty>=median(mpg1$cty))
 ```
-2)5 복수 조건 중 하나라도 충족하는 데이터 추출
+
+### 2.5. 복수 조건 중 하나라도 충족하는 데이터 추출
 ```{r}
 #mpg1에서 일본 자동차들의 데이터만 추출해서 새로운 객체에 입력하기
 
@@ -206,7 +209,7 @@ mpg1_j3 <-mpg1 %>% filter(manufacturer %in% c("honda","nissan","subaru","toyota"
 * shift+\ = '|': 여러 조건 중 하나만 충족되면 조건에 해당하는 데이터를 모두 추출
 * '%in% c()': c()안에 있는 것을 모두 포함한다.
 
-2)6 열을 추출한 후에 조건에 맞는행을 추출하기
+### 2.6. 열을 추출한 후에 조건에 맞는행을 추출하기
 ```{r}
 # mpg1에서 manufactrer,cty 열을 추출한 후에 manufacturer가 hyundai인 자동차 중에 cty가 전체 평균 이상인 데이터를 추출해서 새로운 객체 mpg1_hd9에 입력한다.
 
@@ -216,8 +219,8 @@ mpg1_hd9 <-mpg1 %>%  #새 객체에 입력
   select(manufacturer,cty) %>% #2개 변수 추출
   filter(manufacturer=="hyundai"&cty>=16.85897) #조건부여해서 행 추출
 ```
-### 6. mutate()
-  1) 1개의 파생변수 만들기
+# 6단원 mutate()
+## 1. 1개의 파생변수 만들기
 ```{r}
 # mpg1에는 cty(도시에서의 연비)와 hwy(고속도로에서의 연비) 변수가 있습니다. 
 # mpg1에 두 변수를 합친 total 변수를 만들어서 새 객체 mpg2에 입력하빈다.
@@ -227,7 +230,7 @@ mpg2 <-mpg1 %>%
 
 str(mpg2)
 ```
-  2) 복수의 파생변수 만들기
+## 2. 복수의 파생변수 만들기
 ```{r}
 # total 변수(cty+hwy)와 mean 변수((cty+hwy)/2)를 동시에 만들어 새로운 객체 mpg3에 입력한다.
 
@@ -237,7 +240,7 @@ mpg3 <- mpg1 %>%
 
 str(mpg3)
 ```
-  3) 강의 내용
+## 3. 강의 내용
 ```{r}
 glimpse(iris) # glimpse()=str(): 데이터 미리보기
 
@@ -259,17 +262,18 @@ iris %>%
   mutate(total = Sepal.Length + Sepal.Width) %>% glimpse()->data4
 ```
 
-### 7. group_by(),summarise(),n()
+# 7단원 group_by(),summarise(),n()
 - 집단별 통계량 : '집단으로 쪼개고(split), 집단별로 적용하고(apply), 결과를 합쳐서(combine)' 분석하는 방식
 - group by 와 summarise()는 함께간다. 비교를 해야 데이터가 의미가 있음
-  1) 집단 분류 group_by()
-  - group_by() 함수의 ()안에 '범주형 변수'의 이름을 적으면 행을 범주별로 분류한다.
-  - ex.
-  - mpg1의 trans 변수는 auto와 manual 2개 범주로 구성
-  - group_by(trans)를 하면 모든 행을 auto와 manual로 분류함.
+
+## 1. 집단 분류 group_by()
+- group_by() 함수의 ()안에 '범주형 변수'의 이름을 적으면 행을 범주별로 분류한다.
+- ex.
+- mpg1의 trans 변수는 auto와 manual 2개 범주로 구성
+- group_by(trans)를 하면 모든 행을 auto와 manual로 분류함.
   
-  2) 집단의 통계 구하기 summarise()
-  - 집단별로 통계값을 구할 때 사용하는 함수.
+## 2. 집단의 통계 구하기 summarise()
+- 집단별로 통계값을 구할 때 사용하는 함수.
   
 ```{r}
 mpg1 %>% summarise(m=mean(cty))
@@ -279,10 +283,10 @@ mpg1 %>% summarise(m=mean(cty),s=sum(cty),med=median(cty))
 
 mpg1 %>% summarise(mean(cty),sum(cty),median(cty)) # 변수 이름 미지정정
 ```
-  3) 집단으로 분류해서 집단별 통계 구하기
+## 3. 집단으로 분류해서 집단별 통계 구하기
 ```{r}
 ```
-3)1) 1개 변수를 집단 분류해서 통계 구하기: group_by(변수)+summarise
+### 3.1. 1개 변수를 집단 분류해서 통계 구하기: group_by(변수)+summarise
 - 데이터를 집단으로 분류한 후, 집단별로 통계를 구할 수 있음.
 ```{r}
 # 방법1
@@ -299,7 +303,7 @@ mpg1 %>%
   filter(trans=="manual") %>% 
   summarise(m=mean(cty))
 ```
-3)2) 복수 변수를 집단 분류해서 통계 구하기: group_by(변수1,변수2,...)+summarise
+### 3.2. 복수 변수를 집단 분류해서 통계 구하기: group_by(변수1,변수2,...)+summarise
 ```{r}
 mpg1 %>% 
   filter(trans=="auto"&drv=="4") %>% 
@@ -318,10 +322,10 @@ mpg1 %>%
   group_by(drv,trans) %>% 
   summarise(m=mean(cty))
 ```
-  4) 집단별 빈도와 비율 구하기
+## 4. 집단별 빈도와 비율 구하기
 ```{r}
 ```
-4)1) 분류 집단별 데이터 빈도 구하기:group_by(변수)+summarise(n()함수)
+### 4.1. 분류 집단별 데이터 빈도 구하기:group_by(변수)+summarise(n()함수)
 - 'n()': 집단의 데이터 숫자를 세어 빈도를 알려주는 함수.
 ```{r}
 mpg1 %>% 
@@ -333,7 +337,7 @@ mpg1 %>%
   summarise(n=n(),        #집단별로 빈도 구하기
             m=mean(cty))  #집단별로 평균 구하기
 ```
-4)2) 분류한 집단별 빈도와 비율 구하기:group_by()+summarise(n()) + mutate()의 조합
+### 4.2. 분류한 집단별 빈도와 비율 구하기:group_by()+summarise(n()) + mutate()의 조합
 ```{r}
 mpg1 %>% 
   group_by(trans) %>%       # trans 범주로 구분
@@ -341,7 +345,7 @@ mpg1 %>%
     mutate(total=sum(n),    # trans 범주별 빈도의 총계 구하기
            pct=n/total*100) # trans 범주별 비율 구하기
 ```
-  5) 강의 내용
+## 5. 강의 내용
 ```{r}
 mpg1 %>% 
   group_by(trans) %>% 
@@ -351,7 +355,8 @@ mpg1 %>%
             , count = n())         # n(): group의 사이즈
 # 피버테이블을 만듬.
 ```
-### 이하는 읽고 넘어가기
+
+# 8~11단원은 읽고 넘어가기
 - 8. mutate() + ifelse() 연속 데이터로 범주변수 만들기
 - 9. arrange()데이터 정렬하기
 - 10.데이터 결합하기
