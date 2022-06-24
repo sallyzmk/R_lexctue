@@ -26,17 +26,29 @@ knitr::opts_chunk$set(echo = TRUE)
 - [Rmd 폰트 조절](https://dschloe.github.io/r/rmarkdown/rmarkdownintro/)
 
 # 1단원 데이터 연산 (78p)  [SKIP]
-- 연산: 여러 대상들을 이용해서 새로운 것을 만듬.
+- 연산(operation): 여러 대상들을 이용해서 새로운 것을 만듬.
 
 ## 1. 산술연산
-- 설명
+- 산술연산(arithmetic operation): 수치 데이터를 계산할 때 이용.
+- 사칙연산 (+,-,*,/)
+- %/% : 나누기의 몫 ex.5%/%2 = 2, 5%/%3 = 1
+- %% : 나누기의 나머지 ex.5%%2 = 1, 5%%3 = 2
+- ^ 또는 ** : 제곱 ex.5^2 또는 5**2 = 25, 5^3 또는 5**3 = 125
+```{r}
+5^3
+5**3
+```
 
 ## 2. 비교 연산
-- 설명
+- 비교연산(comparison operatiom): 여러 데이터를 비교하는 기능
+- 두 개의 수가 같거나 크고  작음을 비교
+- 결과는 맞다'T', 틀리다'F'
+- 비교연산에서 '같다' 표시는 '='이 아닌, '=='이다. 다르다는 '!='료 표시한다.
 
 ## 3. 숫자 연산 문법
 ```{r}
 ```
+
 ### 3.1. a:z
 ```{r}
 
@@ -102,8 +114,36 @@ knitr::opts_chunk$set(echo = TRUE)
 # 3단원 기본 통계 함수 (88p)
 ## 1. 통계 함수
 ```{r}
-#mean()
-#var()
+mpg1 <- read.csv("data/mpg1.csv") # “” 잊지 말 것!!!
+# mpg1 <- read.csv("mpg1.csv", stringsAsFactors =F) # 문자형을 펙터로 X
+#함수에 다양한 옵션이 있음. 알아만 두기. F를 T로 변경하면 문자형을 펙터로 O
+str(mpg1)  
+
+# 기본 통계 함수
+sum(mtcars$mpg)  # 합
+range(mtcars$mpg)  # 범위
+max(mtcars$mpg)  # 최댓값
+min(mtcars$mpg)  # 최솟값
+quantile(mtcars$mpg)  # 사분위수
+IQR(mtcars$mpg)  # 1~3분위 범위
+
+# 평균
+mean(mtcars$mpg) # 평균
+var(mtcars$mpg) # 분산
+sd(mtcars$mpg) # 표준편차(편차를 제곱_정수로 만들기 위해,그리고 다시 루트)
+# 표준편차는 여러개를 비교해 볼 때 의미가 있다
+# descriptive Statistics : 통계를 묘시히다.
+
+# 수리통계 -> 수학적으로 증명
+# 그러나 일반인은 수학적 증명 할 필요 없음 -> 함수활용, 의미만 알아두기
+sd(mtcars$mpg) 
+
+
+# 사분위수 : 전체 수를 4등분한 수 ex. 분위
+# 사분위수를 기준점으로 잡는다. 분포를 보기 위해. 평균값은 특출난 1인으로 인해 외곡될 수 있음. 그럼 그 특이 케이스인 1인을 무슨 기준으로 데이터에서 뺄 것이냐를 사분위로 결정.
+# IQR : 1사분위수와 3사분위수 사이의 거리
+# 통계분석 / 머닝머신 -> 이상치 제거 할 때 활용
+quantile(mtcars$mpg)
 
 ```
 
